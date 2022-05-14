@@ -6,11 +6,9 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/token/ERC1155/ERC1155.sol";
 import "@openzeppelin/contracts/access/Ownable.sol";
-import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Burnable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Pausable.sol";
 import "@openzeppelin/contracts/token/ERC1155/extensions/ERC1155Supply.sol";
-import "@openzeppelin/contracts/access/AccessControlEnumerable.sol";
 import "@openzeppelin/contracts/utils/Context.sol";
 
 /**
@@ -29,7 +27,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
  *
  * _Deprecated in favor of https://wizard.openzeppelin.com/[Contracts Wizard]._
  */
-contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC1155Pausable,ERC1155Supply, Ownable {
+contract NanQuotations is Context, ERC1155Pausable,ERC1155Supply, Ownable {
     bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
     bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
@@ -41,9 +39,6 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
      * deploys the contract.
      */
     constructor(string memory uri) ERC1155(uri) {
-        _setupRole(DEFAULT_ADMIN_ROLE, _msgSender());
-        _setupRole(MINTER_ROLE, _msgSender());
-        _setupRole(PAUSER_ROLE, _msgSender());
         maxSupply = 1000;
     }
 
@@ -83,8 +78,7 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
         uint256 id,
         uint256 amount,
         bytes memory data
-    ) public virtual {
-        require(hasRole(MINTER_ROLE, _msgSender()), "ERC1155PresetMinterPauser: must have minter role to mint");
+    ) public onlyOwner virtual {
         require(maxSupply >= totalSupply(id) + amount, "Max supply reached");
         _mint(to, id, amount, data);
     }
@@ -98,8 +92,7 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) public virtual {
-        require(hasRole(MINTER_ROLE, _msgSender()), "ERC1155PresetMinterPauser: must have minter role to mint");
+    ) public onlyOwner virtual {
         _mintBatch(to, ids, amounts, data);
     }
 
@@ -112,8 +105,7 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function pause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC1155PresetMinterPauser: must have pauser role to pause");
+    function pause() public onlyOwner virtual {
         _pause();
     }
 
@@ -126,8 +118,7 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
      *
      * - the caller must have the `PAUSER_ROLE`.
      */
-    function unpause() public virtual {
-        require(hasRole(PAUSER_ROLE, _msgSender()), "ERC1155PresetMinterPauser: must have pauser role to unpause");
+    function unpause() public onlyOwner virtual {
         _unpause();
     }
 
@@ -138,7 +129,7 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
         public
         view
         virtual
-        override(AccessControlEnumerable, ERC1155)
+        override(ERC1155)
         returns (bool)
     {
         return super.supportsInterface(interfaceId);
@@ -151,7 +142,7 @@ contract NanQuotations is Context, AccessControlEnumerable, ERC1155Burnable, ERC
         uint256[] memory ids,
         uint256[] memory amounts,
         bytes memory data
-    ) internal virtual override(ERC1155, ERC1155Pausable, ERC1155Supply) {
+    ) internal virtual override(ERC1155Pausable, ERC1155Supply) {
         super._beforeTokenTransfer(operator, from, to, ids, amounts, data);
     }
 }
