@@ -28,15 +28,13 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * _Deprecated in favor of https://wizard.openzeppelin.com/[Contracts Wizard]._
  */
 contract NanQuotations is Context, ERC1155Pausable,ERC1155Supply, Ownable {
-    bytes32 public constant MINTER_ROLE = keccak256("MINTER_ROLE");
-    bytes32 public constant PAUSER_ROLE = keccak256("PAUSER_ROLE");
 
     enum COIN_TYPE { QUOTATE }
     uint256 public maxSupply;
 
     /**
-     * @dev Grants `DEFAULT_ADMIN_ROLE`, `MINTER_ROLE`, and `PAUSER_ROLE` to the account that
-     * deploys the contract.
+     * @dev set maxSupply
+     * 
      */
     constructor(string memory uri) ERC1155(uri) {
         maxSupply = 1000;
@@ -52,6 +50,7 @@ contract NanQuotations is Context, ERC1155Pausable,ERC1155Supply, Ownable {
       maxSupply = _maxSupply;
     }
 
+    // airdrop nft to address 
     function airDropMint(
         address[] memory toAddresses,
         uint256 amount,
@@ -79,21 +78,9 @@ contract NanQuotations is Context, ERC1155Pausable,ERC1155Supply, Ownable {
         uint256 amount,
         bytes memory data
     ) public onlyOwner virtual {
+        require(amount > 0);
         require(maxSupply >= totalSupply(id) + amount, "Max supply reached");
         _mint(to, id, amount, data);
-    }
-
-
-    /**
-     * @dev xref:ROOT:erc1155.adoc#batch-operations[Batched] variant of {mint}.
-     */
-    function mintBatch(
-        address to,
-        uint256[] memory ids,
-        uint256[] memory amounts,
-        bytes memory data
-    ) public onlyOwner virtual {
-        _mintBatch(to, ids, amounts, data);
     }
 
     /**

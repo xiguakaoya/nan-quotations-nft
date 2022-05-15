@@ -32,13 +32,17 @@ const config: HardhatUserConfig = {
     },
     rinkeby: {
       url: process.env.RINKEBY_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: [
+        process.env.PRIVATE_KEY1 as string,
+        process.env.PRIVATE_KEY2 as string,
+      ],
     },
     mainnet: {
       url: process.env.MAINNET_URL || "",
-      accounts:
-        process.env.PRIVATE_KEY !== undefined ? [process.env.PRIVATE_KEY] : [],
+      accounts: [
+        process.env.PRIVATE_KEY1 as string,
+        process.env.PRIVATE_KEY2 as string,
+      ],
     },
   },
   gasReporter: {

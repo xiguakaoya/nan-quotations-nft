@@ -33,16 +33,15 @@ async function main() {
 
   const Nft = await ethers.getContractAtFromArtifact(
     artifacts,
-    "0x0A5C5a339DdA93FaEf6aC5ca3b531E2748146472"
+    "0x5FbDB2315678afecb367f032d93F642f64180aa3"
   );
   const tx = await Nft.airDropMint(
     address,
     BigNumber.from(2),
     utils.toUtf8Bytes("")
   );
-  const receipt = await tx;
-
-  console.log("receipt", receipt);
+  const receipt = (await tx.wait()).getTransactionReceipt();
+  console.log("空投成功", `gas used${receipt.gasUsed}`);
 }
 
 main().catch((error) => {
