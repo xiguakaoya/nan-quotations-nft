@@ -27,7 +27,7 @@ import "@openzeppelin/contracts/utils/Context.sol";
  * _Deprecated in favor of https://wizard.openzeppelin.com/[Contracts Wizard]._
  */
 contract NanQuotations is Context, ERC1155Pausable,ERC1155Supply, Ownable {
-    string public name = "Nan Quotations";
+    string public name = "Nan's Quotations";
     enum COIN_TYPE { QUOTATE }
     uint256 public maxSupply;
 
