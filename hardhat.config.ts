@@ -25,6 +25,20 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 const config: HardhatUserConfig = {
   solidity: "0.8.4",
   networks: {
+    polygon: {
+      url: process.env.POLYGON || "",
+      accounts: [
+        process.env.PRIVATE_KEY1 as string,
+        process.env.PRIVATE_KEY2 as string,
+      ],
+    },
+    kovan: {
+      url: process.env.KOVAN_URL || "",
+      accounts: [
+        process.env.PRIVATE_KEY1 as string,
+        process.env.PRIVATE_KEY2 as string,
+      ],
+    },
     ropsten: {
       url: process.env.ROPSTEN_URL || "",
       accounts: [
@@ -38,6 +52,8 @@ const config: HardhatUserConfig = {
         process.env.PRIVATE_KEY1 as string,
         process.env.PRIVATE_KEY2 as string,
       ],
+      gas: 2100000,
+      gasPrice: 8000000000,
     },
     mainnet: {
       url: process.env.MAINNET_URL || "",

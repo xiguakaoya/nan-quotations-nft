@@ -18,11 +18,11 @@ async function main() {
   const [owner, account2] = await ethers.getSigners();
   const Nft = await ethers.getContractFactory("NanQuotations");
   const nft = await Nft.deploy(
-    "https://gateway.pinata.cloud/ipfs/QmNPAmwWrsureXRCGQ2zwgG9qdgc9mGXxfmyhuuCF39dNB"
+    "https://gateway.pinata.cloud/ipfs/QmfXG3T1vsMhXxwSKmSmq6s9DsjUTFya4RtZ2Kk3mFYnhH"
   );
   await nft.deployed();
 
-  console.log("Greeter deployed to:", nft.address);
+  console.log("deployed to:", nft.address);
   const tx = await nft.airDropMint(
     [owner.address, account2.address],
     2,
