@@ -88,10 +88,10 @@ describe("NanQuotations", function () {
         )
       ).to.be.reverted;
 
-      const balabnce = await nft
+      const balance = await nft
         .connect(account2)
         .balanceOf(account2.address, BigNumber.from(COINT_TYPE));
-      expect(balabnce).to.equal(0);
+      expect(balance).to.equal(0);
     });
 
     it("unpause token transfers", async () => {
