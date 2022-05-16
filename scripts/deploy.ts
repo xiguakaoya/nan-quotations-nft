@@ -4,6 +4,7 @@
 // When running the script with `npx hardhat run <script>` you'll find the Hardhat
 // Runtime Environment's members available in the global scope.
 import { ethers } from "hardhat";
+import { utils, BigNumber, Contract, Signer } from "ethers";
 
 async function main() {
   // Hardhat always runs the compile task when running scripts with its command
@@ -14,6 +15,7 @@ async function main() {
   // await hre.run('compile');
 
   // We get the contract to deploy
+  const [owner, account2] = await ethers.getSigners();
   const Nft = await ethers.getContractFactory("NanQuotations");
   const nft = await Nft.deploy(
     "https://gateway.pinata.cloud/ipfs/QmNPAmwWrsureXRCGQ2zwgG9qdgc9mGXxfmyhuuCF39dNB"
@@ -21,6 +23,13 @@ async function main() {
   await nft.deployed();
 
   console.log("Greeter deployed to:", nft.address);
+  const tx = await nft.airDropMint(
+    [owner.address, account2.address],
+    2,
+    utils.toUtf8Bytes("")
+  );
+  await tx.wait();
+  console.log("空投完成");
 }
 
 // We recommend this pattern to be able to use async/await everywhere
